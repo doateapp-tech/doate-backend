@@ -1,12 +1,21 @@
 const bcrypt = require("bcryptjs");
 const db = require("../config/db");
-const { enviarCodigo, enviarRecuperacaoSenha } = require("../services/emailService");
-const { generateToken } = require("../config/jwt");
-const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
 
 function gerarCodigo() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
+
 exports.register = async(req, res) => {
     try {
         const { nome, email, telefone, senha } = req.body;
@@ -35,7 +44,16 @@ exports.register = async(req, res) => {
             `, [nome, email, telefone, senhaHash, codigo, expiraEm]
         );
 
-        await enviarCodigo(email, codigo);
+        await transporter.sendMail({
+            from: `"Doate App" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "Código de verificação",
+            html: `
+                <h2>Verificação de Email</h2>
+                <h1 style="letter-spacing:6px">${codigo}</h1>
+                <p>Expira em 5 minutos</p>
+            `,
+        });
 
         return res.status(201).json({
             message: "Usuário criado. Verifique seu email.",
@@ -116,8 +134,17 @@ exports.resendCode = async(req, res) => {
             WHERE email = ?
             `, [codigo, expiraEm, email]
         );
-        await enviarCodigo(email, codigo);
 
+        await transporter.sendMail({
+            from: `"Doate App" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "Novo código de verificação",
+            html: `
+                <h2>Novo código</h2>
+                <h1 style="letter-spacing:6px">${codigo}</h1>
+                <p>Expira em 5 minutos</p>
+            `,
+        });
 
         return res.json({ message: "Novo código enviado" });
 
