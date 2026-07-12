@@ -1,12 +1,12 @@
 const bcrypt = require("bcryptjs");
 const db = require("../config/db");
-const { enviarCodigo } = require("../services/emailService");
+const { enviarCodigo, enviarRecuperacaoSenha } = require("../services/emailService");
+const { generateToken } = require("../config/jwt");
+const jwt = require("jsonwebtoken");
 
 function gerarCodigo() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
-
-
 exports.register = async(req, res) => {
     try {
         const { nome, email, telefone, senha } = req.body;
