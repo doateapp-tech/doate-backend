@@ -21,6 +21,7 @@
         "node-cron": "^4.2.1",
         "node-fetch": "^2.7.0",
         "nodemailer": "^7.0.12",
+        "resend": "^6.17.2",
         "uuid": "^13.0.0"
     },
     "devDependencies": {
