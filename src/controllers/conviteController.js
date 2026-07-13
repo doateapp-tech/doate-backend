@@ -75,3 +75,28 @@ exports.ativarConta = async(req, res) => {
         });
     }
 };
+exports.getLinkConvite = async(req, res) => {
+    try {
+        const { hospital_id } = req.params;
+
+        const [rows] = await db.execute(
+            `SELECT link_ativacao, email, tipo, criado_em, expira_em 
+             FROM convites 
+             WHERE hospital_id = ? 
+             AND usado = 0 
+             AND expira_em > NOW()
+             ORDER BY criado_em DESC 
+             LIMIT 1`, [hospital_id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "Nenhum convite activo encontrado." });
+        }
+
+        return res.status(200).json(rows[0]);
+
+    } catch (error) {
+        console.error("Erro ao buscar link convite:", error);
+        return res.status(500).json({ message: "Erro interno." });
+    }
+};

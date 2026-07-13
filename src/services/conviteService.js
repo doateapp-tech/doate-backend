@@ -38,9 +38,15 @@ exports.criarConvite = async({ hospital_id, email, tipo = "ADMIN" }, conn = null
     );
 
     const link = `${process.env.FRONTEND_URL}/ativar-conta/${token}`;
+
+    // Guarda o link na BD
+    await executor.execute(
+        `UPDATE convites SET link_ativacao = ? WHERE token = ?`, [link, token]
+    );
+
     await emailService.enviarConviteHospital(email, link);
 
-    return { message: "Convite enviado com sucesso" };
+    return { message: "Convite enviado com sucesso", link };
 };
 
 exports.validarConvite = async(token) => {

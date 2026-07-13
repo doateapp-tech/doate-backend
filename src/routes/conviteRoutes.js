@@ -15,5 +15,6 @@ router.post(
 router.get("/:token", conviteController.validarConvite);
 
 router.post("/ativar", conviteController.ativarConta);
+router.get("/link/:hospital_id", authMiddleware, isAdmin, conviteController.getLinkConvite);
 
 module.exports = router;
