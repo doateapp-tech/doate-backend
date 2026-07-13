@@ -89,11 +89,15 @@ exports.atualizarStatus = async(req, res) => {
 
         const result = await solicitacaoService.atualizarStatus(id, status);
 
+        console.log("RESULT:", JSON.stringify(result)); // 👈 adiciona isto
+
         return res.status(200).json({
             success: true,
             message: result.message,
             hospital_id: result.hospital_id || null,
         });
+
+
 
     } catch (error) {
         console.error("Erro ao atualizar status:", error);
