@@ -1,3 +1,4 @@
+const db = require("../config/db");
 const conviteService = require("../services/conviteService");
 
 exports.criarConvite = async(req, res) => {
