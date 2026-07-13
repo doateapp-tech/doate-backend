@@ -191,6 +191,8 @@ exports.atualizarStatus = async(id, status) => {
             `UPDATE solicitacoes_hospital SET status = ? WHERE id = ?`, [status, id]
         );
 
+        let hospitalId = null;
+
         if (status === "aprovado") {
             const [existingHospital] = await connection.execute(
                 `SELECT id FROM hospitais WHERE nif = ?`, [solicitacao.nif]
@@ -203,17 +205,11 @@ exports.atualizarStatus = async(id, status) => {
             const [hospitalResult] = await connection.execute(
                 `INSERT INTO hospitais
                  (nome, nif, provincia, municipio, criado_em, ativo)
-                 VALUES (?, ?, ?, ?, NOW(), 1)`, [
-                    solicitacao.nome,
-                    solicitacao.nif,
-                    solicitacao.provincia,
-                    solicitacao.municipio,
-                ]
+                 VALUES (?, ?, ?, ?, NOW(), 1)`, [solicitacao.nome, solicitacao.nif, solicitacao.provincia, solicitacao.municipio]
             );
 
-            const hospitalId = hospitalResult.insertId;
+            hospitalId = hospitalResult.insertId;
 
-            // Passa a connection — hospital + convite na mesma transação
             await conviteService.criarConvite({
                 hospital_id: hospitalId,
                 email: adminEmail,
@@ -223,7 +219,7 @@ exports.atualizarStatus = async(id, status) => {
 
         await connection.commit();
 
-        return { message: `Solicitação ${status} com sucesso` };
+        return { message: `Solicitação ${status} com sucesso`, hospital_id: hospitalId };
 
     } catch (error) {
         await connection.rollback();

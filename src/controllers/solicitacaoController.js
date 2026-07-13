@@ -74,26 +74,17 @@ exports.atualizarStatus = async(req, res) => {
         const { status } = req.body;
 
         if (!id) {
-            return res.status(400).json({
-                success: false,
-                message: "ID é obrigatório",
-            });
+            return res.status(400).json({ success: false, message: "ID é obrigatório" });
         }
 
         if (!status) {
-            return res.status(400).json({
-                success: false,
-                message: "Status é obrigatório",
-            });
+            return res.status(400).json({ success: false, message: "Status é obrigatório" });
         }
 
         const statusPermitidos = ["pendente", "aprovado", "rejeitado"];
 
         if (!statusPermitidos.includes(status)) {
-            return res.status(400).json({
-                success: false,
-                message: "Status inválido",
-            });
+            return res.status(400).json({ success: false, message: "Status inválido" });
         }
 
         const result = await solicitacaoService.atualizarStatus(id, status);
@@ -101,11 +92,11 @@ exports.atualizarStatus = async(req, res) => {
         return res.status(200).json({
             success: true,
             message: result.message,
+            hospital_id: result.hospital_id || null,
         });
 
     } catch (error) {
         console.error("Erro ao atualizar status:", error);
-
         return res.status(400).json({
             success: false,
             message: error.message || "Erro ao atualizar status",
