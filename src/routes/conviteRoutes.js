@@ -8,7 +8,7 @@ router.post(
     "/",
     authMiddleware,
     onlyHospitalStaff,
-    authorize("ADMIN"),
+    authorize("ADMIN", "INS_ADMIN"),
     conviteController.criarConvite
 );
 

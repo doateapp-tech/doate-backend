@@ -65,7 +65,7 @@ exports.getNearestHospital = async(req, res) => {
         }));
 
         return res.status(200).json({
-            hospital: hospitais[0], // sugerido (mais próximo)
+            hospital: hospitais[0],
             hospitais, // lista completa
             userLocation: { latitude: lat, longitude: lng },
         });

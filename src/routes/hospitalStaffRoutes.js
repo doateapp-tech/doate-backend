@@ -8,10 +8,9 @@ router.post(
     "/usuarios",
     authMiddleware,
     onlyHospitalStaff,
-    authorize("ADMIN"),
+    authorize("ADMIN", "INS_ADMIN"),
     controller.criarUsuario
 );
-
 router.get(
     "/exames",
     authMiddleware,
@@ -31,14 +30,14 @@ router.get(
     "/usuarios",
     authMiddleware,
     onlyHospitalStaff,
-    authorize("ADMIN"),
+    authorize("ADMIN", "INS_ADMIN"),
     controller.listarUsuarios
 );
 router.delete(
     "/usuarios/:id",
     authMiddleware,
     onlyHospitalStaff,
-    authorize("ADMIN"),
+    authorize("ADMIN", "INS_ADMIN"),
     controller.removerUsuario
 );
 module.exports = router;
