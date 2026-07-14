@@ -34,5 +34,11 @@ router.get(
     authorize("ADMIN"),
     controller.listarUsuarios
 );
-
+router.delete(
+    "/usuarios/:id",
+    authMiddleware,
+    onlyHospitalStaff,
+    authorize("ADMIN"),
+    controller.removerUsuario
+);
 module.exports = router;

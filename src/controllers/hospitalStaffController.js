@@ -60,3 +60,17 @@ exports.verEstoque = async(req, res) => {
         return res.status(500).json({ message: "Erro ao buscar estoque" });
     }
 };
+exports.removerUsuario = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const hospital_id = req.user.hospital_id;
+
+        await hospitalStaffService.removerUsuario(id, hospital_id);
+
+        return res.status(200).json({ message: "Usuário removido com sucesso" });
+
+    } catch (error) {
+        console.error("Erro ao remover usuário:", error);
+        return res.status(400).json({ message: error.message || "Erro ao remover usuário" });
+    }
+};

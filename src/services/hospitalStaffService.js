@@ -62,3 +62,16 @@ exports.verEstoque = async(hospital_id) => {
     );
     return rows;
 };
+exports.removerUsuario = async(id, hospital_id) => {
+    const [rows] = await db.execute(
+        `SELECT id FROM usuarios WHERE id = ? AND hospital_id = ?`, [id, hospital_id]
+    );
+
+    if (rows.length === 0) {
+        throw new Error("Usuário não encontrado ou não pertence a este hospital");
+    }
+
+    await db.execute(`DELETE FROM usuarios WHERE id = ?`, [id]);
+
+    return { message: "Removido com sucesso" };
+};
