@@ -27,5 +27,12 @@ router.get(
     authorize("ADMIN", "ESTOQUE"),
     controller.verEstoque
 );
+router.get(
+    "/usuarios",
+    authMiddleware,
+    onlyHospitalStaff,
+    authorize("ADMIN"),
+    controller.listarUsuarios
+);
 
 module.exports = router;
