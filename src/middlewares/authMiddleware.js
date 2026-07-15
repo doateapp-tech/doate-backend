@@ -27,9 +27,7 @@ exports.authMiddleware = (req, res, next) => {
 exports.authorize = (...rolesPermitidos) => {
     return (req, res, next) => {
 
-        console.log("=== AUTHORIZE ===");
-        console.log("Tipo do utilizador:", req.user.tipo_usuario);
-        console.log("Roles permitidos:", rolesPermitidos);
+
 
         if (!req.user) {
             return res.status(401).json({
@@ -44,7 +42,7 @@ exports.authorize = (...rolesPermitidos) => {
             });
         }
 
-        console.log("AUTORIZADO");
+
         next();
     };
 };

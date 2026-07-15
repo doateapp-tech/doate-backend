@@ -26,5 +26,19 @@ router.get(
     authorize("INS_ADMIN"),
     insController.dashboardOverview
 );
+router.get("/estoque-ins", authMiddleware, authorize("INS_ADMIN"), async(req, res) => {
+    try {
+        const [rows] = await db.execute(`
+            SELECT tipo_sanguineo, quantidade
+            FROM estoque_sangue
+            WHERE hospital_id = 20
+            ORDER BY FIELD(tipo_sanguineo, 'A+','A-','B+','B-','AB+','AB-','O+','O-')
+        `);
+        return res.json({ data: rows });
+    } catch (error) {
+        console.error("Erro ao buscar estoque INS:", error);
+        return res.status(500).json({ message: "Erro interno." });
+    }
+});
 
 module.exports = router;
